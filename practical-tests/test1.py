@@ -66,3 +66,14 @@ def squares_list():
     return [x for x in xrange(100) if x % 2 == 0]
 
 print squares_list()
+
+# Problem 4
+
+def hailstone(n):
+    print n,
+    if n == 1:
+        print ""
+        return
+    hailstone(3*n + 1 if n % 2 else n/2)
+
+hailstone(7)
