@@ -46,3 +46,23 @@ for i in xrange(10):
         print j,
     print ""
 
+# Problem Set 3
+
+# Q1
+def cap_first(input_string):
+    return input_string[0].upper() + input_string[1:]
+
+def capitalize_nested(lists_of_strings):
+    new_list = []
+    for list_of_strings in lists_of_strings:
+        new_list.append([cap_first(word) for word in list_of_strings])
+    return new_list
+
+test_list = [["me", "my"], ["you", "youRs"], ["Them", "their", "theiRs"]]
+print capitalize_nested(test_list)
+
+# Q2
+def squares_list():
+    return [x for x in xrange(100) if x % 2 == 0]
+
+print squares_list()
