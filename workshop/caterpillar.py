@@ -29,7 +29,7 @@ def draw_background():
     pygame.draw.ellipse(screen,white,[700, 80, 150, 60])
     
 # Get a caterpillar at a particular location
-mycaterpillar = my_catclass.caterpillar()
+my_caterpillar = my_catclass.Caterpillar()
  
 # Loop until the user clicks the close button.
 done=False
@@ -41,37 +41,35 @@ clock=pygame.time.Clock()
 
 ######################################
 # -------- Main Program Loop -----------
-while done==False:
-    if not(start_anim):
+while not done:
+    if not start_anim :
         for event in pygame.event.get(): # User did something
             if event.type == pygame.QUIT: # If user clicked close
-                done=True # Flag that we are done so we exit this loop
+                done = True # Flag that we are done so we exit this loop
             if event.type == pygame.KEYDOWN: # If user wants to perform an action
                 if event.key == pygame.K_SPACE:
-                    mycaterpillar.grow()
+                    my_caterpillar.grow()
+                if event.key == pygame.K_m:
+                    my_caterpillar.move_forward()
                 if event.key == pygame.K_d:
-                    mycaterpillar.drop_food()
+                    my_caterpillar.drop_food()
                 if event.key == pygame.K_s:
                     start_anim = True
-                if event.key == pygame.K_r:
-                    mycaterpillar.reverse()
-        if pygame.key.get_pressed()[pygame.K_m]:
-            mycaterpillar.move_forward()
                         
     if start_anim:
         for event in pygame.event.get(): # User did something
             if event.type == pygame.QUIT: # If user clicked close
-                done=True # Flag that we are done so we exit this loop
+                done = True # Flag that we are done so we exit this loop
             if event.type == pygame.KEYDOWN:
                 # If user clicks stop animation key
                 if event.key == pygame.K_s:
                     start_anim = False
-        mycaterpillar.move_forward()
+        my_caterpillar.move_forward()
                 
     # Draw the background scene
     draw_background()
     # Draw the caterpillar
-    mycaterpillar.draw_caterpillar(screen)
+    my_caterpillar.draw_caterpillar(screen)
      
     # Limit to 20 frames per second
     clock.tick(50)
