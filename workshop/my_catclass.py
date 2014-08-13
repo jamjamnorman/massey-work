@@ -23,17 +23,27 @@ class caterpillar:
             self.travel_direction = 'right'
            
     def grow(self):
-        mod = -1 if self.travel_direction == 'left' else 1
-
-        if self.body.isEmpty():
-            x = self.face_xcoord - 40*mod
+        if self.travel_direction == 'right':
+            if self.body.isEmpty():
+                x = self.face_xcoord - 35
+            else:
+                x = self.body.last.xcoord - 35*mod
         else:
-            x = self.body.last.xcoord - 35*mod
+            if self.body.isEmpty():
+                x = self.face_xcoord + 40
+            else:
+                x = self.body.last.xcoord - 35*mod
         y = self.face_ycoord
         self.body.addSegment(x, y)
 
     def reverse(self):
-        self.travel_direction = 'left' if self.travel_direction == 'right' else 'right'
+        if self.travel_direction == 'right':
+            self.travel_direction = 'left'
+            mod = -1
+        else:
+            self.travel_direction = 'right'
+            mod = 1
+        self.face_xcoord += (35*(self.body.length+1))*mod
         self.body.reverse_queue()
     
     def move_forward(self):
@@ -58,9 +68,13 @@ class caterpillar:
         pygame.draw.ellipse(screen,red,[x, y, 40, 45])
         pygame.draw.ellipse(screen,black,[x+6, y+10, 10, 15])
         pygame.draw.ellipse(screen,black,[x+24, y+10, 10, 15])
-        pygame.draw.line(screen,black, (x+11, y), (x+9, y-10), 3)
-        pygame.draw.line(screen,black, (x+24, y), (x+26, y-10), 3)
-        
+        if self.travel_direction == 'right':
+            pygame.draw.line(screen,black, (x+11, y), (x+9, y-10), 3)
+            pygame.draw.line(screen,black, (x+20, y), (x+20, y-10), 3)
+        else:
+            pygame.draw.line(screen,black, (x+16, y), (x+16, y-10), 3)
+            pygame.draw.line(screen,black, (x+25, y), (x+26, y-10), 3)
+
     def draw_body(self, screen):
         #traverse the segment queue
         current_node = self.body.head
@@ -101,14 +115,18 @@ class segment_queue:
         self.length += 1
     
     def reverse_queue(self):
-        x, y = self.last.xcoord, self.last.ycoord
-        self.head = body_segment(x, y)
-        current_node = self.head
-        for i in range(1, self.length):
-            current_node = current_node.next
-            current_node.next = body_segment(x - 35*i, y)
-        self.last = current_node
-    
+        last_segment = None
+        current_segment = self.head
+        self.last = self.head
+
+        while current_segment is not None:
+            next_segment = current_segment.next
+            current_segment.next = last_segment
+            last_segment = current_segment
+            current_segment = next_segment
+
+        self.head = last_segment
+
 class body_segment:
     def __init__(self, x, y):
         self.xcoord = x
