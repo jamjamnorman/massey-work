@@ -63,7 +63,7 @@ print capitalize_nested(test_list)
 
 # Q2
 def squares_list():
-    return [x for x in xrange(100) if x % 2 == 0]
+    return [x**2 for x in xrange(100) if x % 2 == 0]
 
 print squares_list()
 
@@ -72,7 +72,6 @@ print squares_list()
 def hailstone(n):
     print n,
     if n == 1:
-        print ""
         return
     hailstone(3*n + 1 if n % 2 else n/2)
 
