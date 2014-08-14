@@ -15,6 +15,7 @@ class Caterpillar:
         self.face_ycoord = 250
         self.body = SegmentQueue()
         self.food = FoodList()
+        self.sick = False
         if random.randrange(0,2):
             self.travel_direction = 'left'
         else:
@@ -44,10 +45,12 @@ class Caterpillar:
 
     def eat_food(self, food):
         if food.foodtype == 'nice':
+            self.sick = False
             if self.body.length <= 10:
                 self.grow()
         elif self.body.length >= 1:
             self.shrink()
+            self.sick = True
 
     def reverse(self):
         if self.travel_direction == 'right':
@@ -121,10 +124,18 @@ class Caterpillar:
 
     def draw_body(self, screen):
         # traverse the segment queue
+        color = green
+        if self.sick:
+            color = purple
+
         current_segment = self.body.head
         while current_segment is not None:
-            current_segment.draw_segment(screen) 
-            current_segment = current_segment.next 
+            current_segment.draw_segment(screen, color) 
+            current_segment = current_segment.next
+            if color == purple:
+                color = black
+            elif color  == black:
+                color = purple
            
     def draw_food(self, screen):
         # traverse the food queue
@@ -170,12 +181,12 @@ class BodySegment:
         self.ycoord = y
         self.next = None
         
-    def draw_segment(self, screen):
+    def draw_segment(self, screen, color = green):
         x = self.xcoord
         y = self.ycoord
-        pygame.draw.ellipse(screen,green,[x, y, 35, 40])
-        pygame.draw.line(screen,black, (x+8, y+35), (x+8, y+45), 3)
-        pygame.draw.line(screen,black, (x+24, y+35), (x+24, y+45), 3)
+        pygame.draw.ellipse(screen, color, [x, y, 35, 40])
+        pygame.draw.line(screen, black, (x+8, y+35), (x+8, y+45), 3)
+        pygame.draw.line(screen, black, (x+24, y+35), (x+24, y+45), 3)
         
 class FoodList:
     def __init__(self):
@@ -209,7 +220,7 @@ class FoodItem:
         x = self.xcoord
         y = self.ycoord
         if self.foodtype == 'nice':
-            pygame.draw.ellipse(screen,yellow,[x, y, 15, 15])
+            pygame.draw.ellipse(screen, yellow, [x, y, 15, 15])
         else:
-            pygame.draw.ellipse(screen,purple,[x, y, 15, 15])
+            pygame.draw.ellipse(screen, purple, [x, y, 15, 15])
 
